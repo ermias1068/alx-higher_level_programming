@@ -5,12 +5,10 @@ def swap(a, b):
     a = a - b
     return a, b
 
-a = 5
-b = 10
+a = 10
+b = 89
 
-# Inserted code to switch values
 a, b = swap(a, b)
 
-print("a:", a)
-print("b:", b)
+print(f"a={a} - b={b}")
 
