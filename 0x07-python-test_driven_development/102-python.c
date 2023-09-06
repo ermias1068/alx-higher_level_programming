@@ -1,34 +1,34 @@
-#include <stdio.h>
-#include <string.h>
 #include <Python.h>
+#include <stdio.h>
+#include <Python3.8/Python.h>
 
-/**
- * print_python_string - Prints string information
- * 
- * @p: Python Object
- * Return: no return
- */
-void print_python_string(PyObject *p)
-{
-	
-	PyObject *str, *repr;
+void print_python_string(PyObject *p) {
+    // Check if the object is a string
+    if (PyUnicode_Check(p)) {
+        // Extract information about the string
+        Py_UNICODE *value;
+        Py_ssize_t length;
+        PyObject *repr;
 
-	(void)repr;
-	printf("[.] string object info\n");
+        // Get the value and length of the string
+        value = PyUnicode_AsUnicode(p);
+        length = PyUnicode_GET_LENGTH(p);
 
-	if (strcmp(p->ob_type->tp_name, "str"))
-	{
-		printf("  [ERROR] Invalid String Object\n");
-		return;
-	}
+        // Create a Python repr of the string
+        repr = PyObject_Repr(p);
 
-	if (PyUnicode_IS_COMPACT_ASCII(p))
-		printf("  type: compact ascii\n");
-	else
-		printf("  type: compact unicode object\n");
+        // Print the string object info
+        printf("[.] string object info\n");
+        printf("  type: %s\n", PyUnicode_IS_COMPACT_ASCII(p) ? "compact ascii" : "compact unicode object");
+        printf("  length: %zd\n", length);
+        printf("  value: %ls\n", value);
 
-	repr = PyObject_Repr(p);
-	str = PyUnicode_AsEncodedString(p, "utf-8", "~E~");
-	printf("  length: %ld\n", PyUnicode_GET_SIZE(p));
-	printf("  value: %s\n", PyBytes_AsString(str));
+        // Clean up
+        Py_XDECREF(repr);
+    } else {
+        // Print an error message for invalid string objects
+        fprintf(stderr, "[.] string object info\n");
+        fprintf(stderr, "  [ERROR] Invalid String Object\n");
+    }
 }
+
